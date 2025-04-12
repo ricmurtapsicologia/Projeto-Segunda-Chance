@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projeto Segunda Chance – Conhecimento que Salva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Ícones (Font Awesome) -->
+  <script
+    src="https://kit.fontawesome.com/2b444a9f1f.js"
+    crossorigin="anonymous"
+  ></script>
+
+  <style>
+    /***************************************************
+     * RESET & BASE
+     ***************************************************/
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      overflow-x: hidden; /* Oculta rolagem horizontal */
+      height: 100%;
+      scroll-behavior: smooth;
+      font-family: "Open Sans", sans-serif;
+      background-color: #f3f7fa;
+      color: #333;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    ul, li {
+      list-style: none;
+    }
+
+    /***************************************************
+     * HEADER
+     ***************************************************/
+    header {
+      background-color: #2367a2; /* Azul calmo */
+      color: #fff;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    header p {
+      font-size: 1rem;
+      max-width: 900px;
+      margin: 0.5rem auto 0;
+    }
+
+    /***************************************************
+     * LAYOUT CONTAINER
+     ***************************************************/
+    .container {
+      display: flex;
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 1rem auto;
+      padding: 0 1rem;
+      gap: 1rem;
+    }
+
+    /***************************************************
+     * SIDEBAR
+     ***************************************************/
+    nav {
+      flex: 0 0 250px;
+      background-color: #ffffff;
+      border: 1px solid #dde3e8;
+      border-radius: 6px;
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+      align-self: flex-start;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding-bottom: 1rem;
+    }
+
+    nav h2 {
+      background-color: #2367a2;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 6px 6px 0 0;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    nav ul {
+      padding: 0 1rem;
+    }
+
+    /* Botão de série */
+    .series-btn {
+      width: 100%;
+      text-align: left;
+      background-color: #f9fafb;
+      border: 1px solid #dde3e8;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      color: #333;
+      margin: 0.5rem 0;
+      transition: background-color 0.3s;
+    }
+    .series-btn:hover {
+      background-color: #ebf1f5;
+    }
+    .series-btn.active {
+      background-color: #d1e3f1;
+      border-color: #2367a2;
+      color: #2367a2;
+      font-weight: 600;
+    }
+
+    /* Lista de capítulos dentro de cada série */
+    .chapters-list {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .chapters-list li {
+      margin: 0.3rem 0;
+    }
+
+    /* Botão de capítulo */
+    .chapter-btn {
+      width: 100%;
+      text-align: left;
+      background-color: #f9fafb;
+      border: 1px solid #dde3e8;
+      border-radius: 4px;
+      padding: 0.4rem 1rem;
+      font-size: 0.88rem;
+      color: #333;
+      transition: background-color 0.3s;
+    }
+    .chapter-btn:hover {
+      background-color: #ebf1f5;
+    }
+    .chapter-btn.active {
+      background-color: #d1e3f1;
+      border-color: #2367a2;
+      color: #2367a2;
+      font-weight: 600;
+    }
+
+    /***************************************************
+     * MAIN CONTENT AREA
+     ***************************************************/
+    main {
+      flex: 1;
+      background-color: #ffffff;
+      border: 1px solid #dde3e8;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      /* Altura mínima para exibir bem o conteúdo e rolar se necessário */
+      min-height: 60vh;
+    }
+
+    /* Animação de fadeIn para cada troca de conteúdo */
+    .fadeIn {
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /***************************************************
+     * TOPIC SLIDES
+     ***************************************************/
+    .chapter-container {
+      display: none; /* Todos os capítulos começam ocultos */
+    }
+    .chapter-container.active {
+      display: block; /* Exibe apenas o capítulo selecionado */
+    }
+
+    .topic-slide {
+      display: none; /* Cada tópico inicialmente oculto */
+    }
+    .topic-slide.active {
+      display: block; /* Exibe apenas o tópico atual */
+    }
+
+    /* Títulos e textos */
+    .topic-slide h2 {
+      font-size: 1.3rem;
+      color: #2367a2;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #2367a2;
+      padding-bottom: 0.3rem;
+    }
+    .topic-slide h3 {
+      font-size: 1.1rem;
+      color: #2367a2;
+      margin: 1.5rem 0 0.5rem;
+    }
+    .topic-slide p,
+    .topic-slide ul,
+    .topic-slide ol {
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      text-align: justify;
+    }
+    .topic-slide ul {
+      list-style: disc;
+      margin-left: 1.5rem;
+    }
+    .topic-slide li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Botões de navegação de tópico */
+    .topic-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    .topic-navigation button {
+      background-color: #2367a2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .topic-navigation button:hover {
+      background-color: #1c4e78;
+    }
+    .topic-navigation button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: #2367a2;
+    }
+
+    /***************************************************
+     * FOOTER
+     ***************************************************/
+    footer {
+      background-color: #2367a2;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+    footer p {
+      margin-bottom: 0.5rem;
+    }
+
+    /***************************************************
+     * RESPONSIVE
+     ***************************************************/
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 0 0.5rem;
+      }
+      nav {
+        position: static;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      main {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>PROJETO SEGUNDA CHANCE – CONHECIMENTO QUE SALVA</h1>
+    <p>
+      O suicídio é um fenômeno complexo, e quem atua na linha de frente
+      precisa de conhecimento atualizado para agir com precisão e empatia.
+    </p>
+  </header>
+
+  <!-- CONTAINER PRINCIPAL (NAV + MAIN) -->
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <nav aria-label="Séries">
+      <h2><i class="fa-solid fa-book-open"></i> Séries</h2>
+      <ul>
+        <!-- Série 1 -->
+        <li>
+          <button class="series-btn" data-series="series1">Série 1</button>
+          <ul class="chapters-list" id="series1Chapters" style="display: none;">
+            <li><button class="chapter-btn" data-chapter="chapter1">Capítulo 1</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter2">Capítulo 2</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter3">Capítulo 3</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter4">Capítulo 4</button></li>
+          </ul>
+        </li>
+
+        <!-- Série 2 -->
+        <li>
+          <button class="series-btn" data-series="series2">Série 2</button>
+          <ul class="chapters-list" id="series2Chapters" style="display: none;">
+            <li><button class="chapter-btn" data-chapter="chapter5">Capítulo 5</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter6">Capítulo 6</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter7">Capítulo 7</button></li>
+            <li><button class="chapter-btn" data-chapter="chapter8">Capítulo 8</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- MAIN CONTENT (CAPÍTULOS E TÓPICOS) -->
+    <main>
+      <!-- ===================================
+           CAPÍTULO 1 - SÉRIE 1
+           =================================== -->
+      <div id="chapter1" class="chapter-container">
+        <!-- Tópico 1.1 -->
+        <div class="topic-slide" id="chapter1-topic1">
+          <h2>CAPÍTULO 1 – SUICÍDIO: DA HISTÓRIA À EMERGÊNCIA</h2>
+          <p>
+            📢 <strong>CAPÍTULO 1 – SUICÍDIO: DA HISTÓRIA À EMERGÊNCIA 🚨</strong><br><br>
+            O suicídio é um dos fenômenos mais antigos e complexos da humanidade. Ele atravessa culturas, religiões, períodos históricos e fronteiras. Mas sua interpretação mudou drasticamente ao longo dos séculos.
+          </p>
+          <p>
+            Hoje, estamos na linha de frente do combate ao suicídio, atuando na prevenção e dissuasão de tentantes. Mas para salvar vidas, precisamos entender como a sociedade construiu – e desconstruiu – a visão sobre o suicídio ao longo da história.
+          </p>
+          <p>
+            📍 Como passamos da condenação moral para o olhar científico?<br>
+            📍 Por que algumas culturas romantizaram o suicídio e outras o criminalizaram?<br>
+            📍 Como esses conceitos influenciam a forma como lidamos com tentantes hoje?
+          </p>
+          <p>
+            A jornada para compreender o comportamento suicida começa agora.
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button disabled>← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 1)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.2 -->
+        <div class="topic-slide" id="chapter1-topic2">
+          <h3>🗿 SUICÍDIO NA ANTIGUIDADE: HONRA OU TRANSGRESSÃO?</h3>
+          <p>
+            As primeiras sociedades não viam o suicídio como um transtorno, mas sim como um ato de honra, poder ou punição.
+          </p>
+          <ul>
+            <li>
+              <strong>Grécia Antiga:</strong> Platão condenava o suicídio, exceto em casos de desonra, sacrifício religioso ou doença incurável. Já os estoicos, como Sêneca, defendiam que a vida pertence ao indivíduo, e a morte pode ser um ato racional.
+            </li>
+            <li>
+              <strong>Roma Antiga:</strong> O suicídio era aceito entre soldados e senadores, mas proibido para escravos – um reflexo de seu valor econômico.
+            </li>
+            <li>
+              <strong>Japão Feudal:</strong> O seppuku (suicídio ritual dos samurais) era considerado um ato de honra e lealdade.
+            </li>
+          </ul>
+          <p>
+            Mesmo sem o conceito moderno de transtornos mentais, as sociedades antigas já reconheciam que o suicídio não era um fenômeno simples.
+          </p>
+          <p>
+            📖 Sugestão de leitura: História do Suicídio – Entenda a evolução do conceito de suicídio ao longo dos séculos 
+            <br>📽️ 👉 
+            <a href="https://youtu.be/nJb1k0_gIos?si=01lxnXWjthVCd8Jk" target="_blank">Assista aqui</a>
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 1)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 2)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.3 -->
+        <div class="topic-slide" id="chapter1-topic3">
+          <h3>⛓️ IDADE MÉDIA: CRIME, PECADO E PUNIÇÃO</h3>
+          <p>
+            Com a ascensão do cristianismo, o suicídio passou a ser visto como um pecado mortal e uma ofensa contra Deus. A Igreja Católica determinava que suicidas não teriam direito a enterro sagrado.
+          </p>
+          <p>
+            ⚖️ No campo jurídico, suicidar-se tornou crime, e em alguns lugares a família do tentante podia perder seus bens. O medo da condenação eterna levou ao silenciamento do suicídio, um tabu que persistiu por séculos.
+          </p>
+          <p>
+            Ainda hoje, esse legado influencia a culpabilização de tentantes e suas famílias, dificultando a busca por ajuda.
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 2)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 3)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.4 -->
+        <div class="topic-slide" id="chapter1-topic4">
+          <h3>📖 O ILUMINISMO E A VISÃO PSICOLÓGICA DO SUICÍDIO</h3>
+          <p>
+            Foi só no século XVIII que o suicídio começou a ser estudado como um fenômeno psicológico e social. Filósofos e cientistas questionaram a visão moralista e propuseram novas explicações:
+          </p>
+          <ul>
+            <li>
+              <strong>David Hume:</strong> Defendia que o suicídio era uma decisão individual e não um pecado.
+            </li>
+            <li>
+              <strong>Émile Durkheim:</strong> Considerado o "pai da sociologia do suicídio", propôs que fatores sociais e econômicos influenciam as taxas de suicídio (suicídio egoísta, altruísta, anômico e fatalista).
+            </li>
+          </ul>
+          <p>
+            Essa mudança abriu caminho para a abordagem médica e científica que utilizamos hoje, mas o estigma ainda persiste em muitas sociedades.
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 3)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 4)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.5 -->
+        <div class="topic-slide" id="chapter1-topic5">
+          <h3>🩺 O OLHAR MÉDICO E CIENTÍFICO: O QUE SABEMOS HOJE?</h3>
+          <p>
+            Atualmente, o suicídio é reconhecido como um fenômeno multifatorial, influenciado por:
+          </p>
+          <ul>
+            <li>🧠 Fatores biológicos: desequilíbrio de neurotransmissores (serotonina, dopamina, glutamato), predisposição genética e alterações cerebrais.</li>
+            <li>💬 Fatores psicológicos: transtornos psiquiátricos, traumas, sofrimento emocional intenso.</li>
+            <li>🌍 Fatores sociais e ambientais: isolamento, violência, crises econômicas, efeito contágio.</li>
+          </ul>
+          <p>
+            A psiquiatria, a psicologia e as neurociências avançaram na compreensão do suicídio, permitindo que os abordadores possam atuar de forma mais estratégica e eficaz.
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 4)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 5)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.6 -->
+        <div class="topic-slide" id="chapter1-topic6">
+          <h3>🚨 O PAPEL DO EMERGENCISTA: POR QUE ISSO IMPORTA PARA VOCÊ?</h3>
+          <p>
+            Agora que entendemos a evolução histórica do suicídio, precisamos refletir: como essa trajetória influencia sua atuação na abordagem de tentantes?
+          </p>
+          <ul>
+            <li>🔹 Evitar julgamentos: muitos tentantes ainda enfrentam o peso do estigma histórico e religioso.</li>
+            <li>🔹 Compreender o sofrimento: o suicídio não é um ato de fraqueza ou egoísmo, mas sim um reflexo de um sofrimento intenso e multifatorial.</li>
+            <li>🔹 Melhorar a abordagem: conhecer a história do suicídio ajuda a construir uma comunicação mais empática e eficaz com o tentante.</li>
+          </ul>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 5)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter1', 6)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 1.7 -->
+        <div class="topic-slide" id="chapter1-topic7">
+          <h3>💡 REFLEXÃO PARA ABORDADORES</h3>
+          <p>
+            🔹 Você já atendeu tentantes que mencionaram culpa ou condenação religiosa?<br>
+            🔹 Já percebeu como a sociedade ainda carrega crenças antigas sobre suicídio?<br>
+            🔹 Como esse conhecimento pode mudar sua abordagem na próxima ocorrência?
+          </p>
+          <p>
+            O suicídio é um fenômeno histórico, social, biológico e psicológico. Entender sua complexidade torna sua atuação mais precisa e humanizada.
+          </p>
+          <p>
+            📢 No próximo capítulo: Como a mente suicida funciona?  
+            <br>🗓️ Segunda-feira que vem!
+          </p>
+          <p>
+            📍 Richelmy Murta  
+            <br>Major BM | Coordenador do GTO de Atendimento a Tentativas de Suicídio do CBMMG
+            <br>Psicólogo Clínico | Especialista em Terapia Cognitivo-Comportamental
+          </p>
+
+          <!-- Navegação de tópico -->
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter1', 6)">← Tópico Anterior</button>
+            <button onclick="goToNextChapter('chapter2')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 2 - SÉRIE 1
+           =================================== -->
+      <div id="chapter2" class="chapter-container">
+        <!-- Tópico 2.1 -->
+        <div class="topic-slide" id="chapter2-topic1">
+          <h2>CAPÍTULO 2 – COMO A MENTE SUICIDA FUNCIONA?</h2>
+          <p>
+            📢 <strong>CAPÍTULO 2 – COMO A MENTE SUICIDA FUNCIONA? 🧠🚨</strong><br><br>
+            Por que algumas pessoas pensam em morrer e outras tentam de fato se matar?
+          </p>
+          <p>
+            Nem toda ideação suicida resulta em uma tentativa, e compreender essa diferença é essencial para o trabalho dos abordadores. Hoje, a ciência já mapeou os fatores que transformam uma ideia suicida em um ato concreto.
+          </p>
+          <p>
+            📍 O que leva alguém a desejar a morte?<br>
+            📍 O que faz uma pessoa perder o medo de morrer?<br>
+            📍 Como esses fatores influenciam a abordagem dos emergencistas?
+          </p>
+          <p>
+            A resposta para essas perguntas pode salvar vidas.
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="nextTopic('chapter2', 1)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 2.2 -->
+        <div class="topic-slide" id="chapter2-topic2">
+          <h3>🧩 A TEORIA INTERPESSOAL DO SUICÍDIO (THOMAS JOINER)</h3>
+          <p>
+            Um dos modelos mais aceitos para explicar o comportamento suicida é a Teoria Interpessoal do Suicídio, desenvolvida pelo psicólogo Thomas Joiner.
+          </p>
+          <p>
+            Ele propõe que três fatores principais aumentam o risco de uma tentativa:
+          </p>
+          <ul>
+            <li>🔹 Fardo percebido: o tentante acredita que sua existência prejudica os outros. Ele pensa que “seria melhor se eu não estivesse aqui”.</li>
+            <li>🔹 Desconexão social: a pessoa sente que não pertence a nenhum grupo significativo. Ela se vê como um peso sem propósito.</li>
+            <li>🔹 Capacidade adquirida para o suicídio: o medo da morte vai diminuindo devido à exposição a experiências dolorosas, como violência, abuso, automutilação ou tentativas anteriores.</li>
+          </ul>
+          <p>
+            A combinação desses fatores cria o cenário propício para uma tentativa.
+          </p>
+          <p>
+            💡 Atenção: Nem toda pessoa que pensa em suicídio tentará se matar, mas aquelas que apresentam esses três fatores correm um risco significativamente maior.
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter2', 1)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter2', 2)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 2.3 -->
+        <div class="topic-slide" id="chapter2-topic3">
+          <h3>🔄 DA IDEIA AO ATO: A TRANSIÇÃO SUICIDA</h3>
+          <p>
+            A maioria das pessoas que pensa em suicídio não tenta se matar imediatamente. Existe um processo, que pode durar dias, semanas ou até anos.
+          </p>
+          <p>
+            🛑 Fases do comportamento suicida:
+          </p>
+          <ol>
+            <li>Ideação passiva – Pensamentos como “Eu preferia não estar aqui” ou “E se eu dormisse e não acordasse mais?”</li>
+            <li>Ideação ativa – A pessoa começa a planejar, mas sem data definida.</li>
+            <li>Intenção clara – A pessoa define um método e momento específico para agir.</li>
+            <li>Tentativa de suicídio – A crise atinge o ponto crítico e ocorre a tentativa.</li>
+          </ol>
+          <p>
+            Quanto mais avançado o processo, maior a urgência da intervenção.
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter2', 2)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter2', 3)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 2.4 -->
+        <div class="topic-slide" id="chapter2-topic4">
+          <h3>📖 O QUE LEVA UMA PESSOA A PERDER O MEDO DE MORRER?</h3>
+          <p>
+            A maioria das pessoas teme a morte. Mas, para um tentante, esse medo pode diminuir devido a experiências traumáticas e exposição repetida à dor.
+          </p>
+          <p>
+            Fatores que contribuem para isso:
+          </p>
+          <ul>
+            <li>⚔️ Violência e abuso: indivíduos expostos a violência tendem a desenvolver maior tolerância ao sofrimento e menor medo da morte.</li>
+            <li>💉 Uso de drogas: substâncias como álcool e drogas ilícitas reduzem a inibição e aumentam o risco de comportamento impulsivo.</li>
+            <li>🔪 Autolesão: pessoas que têm comportamento autolesivo frequentemente estão mais propensas a tentativas graves, pois já passaram pela experiência de dor.</li>
+            <li>🚨 Tentativas anteriores: cada tentativa reduz a barreira psicológica para novas ações.</li>
+          </ul>
+          <p>
+            O papel do emergencista é interromper esse ciclo antes que a tentativa aconteça.
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter2', 3)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter2', 4)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Tópico 2.5 -->
+        <div class="topic-slide" id="chapter2-topic5">
+          <h3>💬 O QUE ISSO SIGNIFICA PARA OS ABORDADORES?</h3>
+          <p>
+            Agora que compreendemos como a mente suicida funciona, precisamos refletir:
+          </p>
+          <ul>
+            <li>🔹 Como identificar esses sinais em um tentante?</li>
+            <li>🔹 Como evitar que um pensamento suicida se transforme em tentativa?</li>
+            <li>🔹 Como lidar com alguém que já não teme mais a morte?</li>
+          </ul>
+          <p>
+            A resposta está na abordagem correta, empática e baseada em evidências.
+          </p>
+          <p>
+            💡 Nas próximas edições, exploraremos estratégias eficazes para intervir e reduzir o risco de uma tentativa.
+          </p>
+          <p>
+            📢 No próximo capítulo: Neurobiologia do suicídio – o que acontece no cérebro? 
+            <br>🗓️ Segunda-feira que vem!
+          </p>
+          <p>
+            📍 Richelmy Murta  
+            <br>Major BM | Coordenador do GTO de Atendimento a Tentativas de Suicídio do CBMMG
+            <br>Psicólogo Clínico | Especialista em Terapia Cognitivo-Comportamental
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter2', 4)">← Tópico Anterior</button>
+            <button onclick="goToNextChapter('chapter3')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 3 - SÉRIE 1
+           =================================== -->
+      <div id="chapter3" class="chapter-container">
+        <!-- Agrupando cada subtítulo em um tópico-slide. Abaixo apenas exemplo resumido. -->
+        <div class="topic-slide" id="chapter3-topic1">
+          <h2>CAPÍTULO 3 – NEUROBIOLOGIA DO SUICÍDIO: O QUE ACONTECE NO CÉREBRO?</h2>
+          <p>
+            📢 <strong>CAPÍTULO 3 – NEUROBIOLOGIA DO SUICÍDIO: O QUE ACONTECE NO CÉREBRO? 🧠🛑</strong><br><br>
+            O suicídio não é apenas um ato de desespero ou decisão racional. Ele envolve mudanças químicas e estruturais no cérebro, que afetam a impulsividade, a regulação emocional e a tomada de decisões.
+          </p>
+          <p>
+            📍 O que a ciência já descobriu sobre o cérebro suicida?<br>
+            📍 Como neurotransmissores como serotonina e dopamina influenciam esse comportamento?<br>
+            📍 Existem marcadores biológicos que ajudam a prever o risco de suicídio?
+          </p>
+          <p>
+            A neurociência pode fornecer respostas cruciais para a compreensão e a prevenção do suicídio.
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="nextTopic('chapter3', 1)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <div class="topic-slide" id="chapter3-topic2">
+          <h3>🧪 O PAPEL DOS NEUROTRANSMISSORES NO COMPORTAMENTO SUICIDA</h3>
+          <p>
+            Nosso cérebro funciona através da comunicação entre bilhões de neurônios, que utilizam neurotransmissores para transmitir informações. No comportamento suicida, alguns desses mensageiros químicos se destacam:
+          </p>
+          <ul>
+            <li>🔹 <strong>Serotonina (5-HT):</strong> Baixos níveis estão associados à impulsividade, depressão e maior risco de suicídio.</li>
+            <li>🔹 <strong>Dopamina (DA):</strong> Relacionada ao prazer e motivação. Déficits na transmissão dopaminérgica podem levar à apatia e desesperança.</li>
+            <li>🔹 <strong>Glutamato (Glu):</strong> Alterações podem aumentar a impulsividade e a reatividade emocional.</li>
+          </ul>
+          <p>
+            Essas alterações não justificam o suicídio isoladamente, mas aumentam a vulnerabilidade em indivíduos predispostos.
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter3', 1)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter3', 2)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <div class="topic-slide" id="chapter3-topic3">
+          <h3>📍 O CÉREBRO SUICIDA: ALTERAÇÕES ESTRUTURAIS</h3>
+          <p>
+            Pesquisas com exames de neuroimagem revelaram que algumas regiões cerebrais apresentam diferenças em indivíduos com histórico de comportamento suicida:
+          </p>
+          <ul>
+            <li>🔸 <strong>Córtex pré-frontal (CPF):</strong> Responsável pelo controle inibitório e tomada de decisões; em tentantes, a atividade costuma estar reduzida.</li>
+            <li>🔸 <strong>Amígdala:</strong> Centro do medo e das emoções; pode apresentar hiperatividade na ideação suicida.</li>
+            <li>🔸 <strong>Hipocampo:</strong> Relacionado à memória e à regulação do estresse; muitas vezes há redução de volume em tentantes.</li>
+          </ul>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter3', 2)">← Tópico Anterior</button>
+            <button onclick="nextTopic('chapter3', 3)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <div class="topic-slide" id="chapter3-topic4">
+          <p>
+            📊 Embora ainda não exista um exame clínico capaz de prever o suicídio, descobertas sobre marcadores como níveis de 5-HIAA, cortisol e inflamação cerebral ajudam a entender fatores biológicos envolvidos.
+          </p>
+          <p>
+            📢 No próximo capítulo: Como dissuadir um tentante? Técnicas e abordagens eficazes.
+            <br>🗓️ Segunda-feira que vem!
+          </p>
+          <p>
+            📍 Richelmy Murta  
+            <br>Major BM | Coordenador do GTO de Atendimento a Tentativas de Suicídio do CBMMG
+            <br>Psicólogo Clínico | Especialista em Terapia Cognitivo-Comportamental
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter3', 3)">← Tópico Anterior</button>
+            <button onclick="goToNextChapter('chapter4')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 4 - SÉRIE 1
+           =================================== -->
+      <div id="chapter4" class="chapter-container">
+        <!-- Exemplo de 2 tópicos para ilustrar -->
+        <div class="topic-slide" id="chapter4-topic1">
+          <h2>CAPÍTULO 4 – COMUNICAÇÃO DISSUASIVA: A PALAVRA QUE SALVA</h2>
+          <p>
+            📢 <strong>CAPÍTULO 4 – COMUNICAÇÃO DISSUASIVA: A PALAVRA QUE SALVA 🗣️🛑</strong><br><br>
+            O suicídio, na maioria das vezes, não é fruto de um planejamento rígido, mas de um estado emocional desregulado e impulsivo. O objetivo da comunicação dissuasiva é modular esse estado emocional, reduzir a impulsividade e abrir espaço para alternativas além do suicídio.
+          </p>
+          <p>
+            📍 Como a escuta ativa fortalece o vínculo e reduz o risco?<br>
+            📍 O que são a ponte para o passado, ponte para o futuro e técnica do sucesso anterior?<br>
+            📍 Como adaptar a comunicação para tentantes agressivos, depressivos e psicóticos?
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="nextTopic('chapter4', 1)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <div class="topic-slide" id="chapter4-topic2">
+          <p>
+            📢 Este foi o último capítulo da nossa série “O que sabemos sobre o comportamento suicida?”. Mas nossa missão continua.
+            <br>📆 Na próxima segunda-feira, começamos uma nova série com um novo eixo temático!
+          </p>
+          <p>
+            📍 Richelmy Murta  
+            <br>Major BM | Coordenador do GTO de Atendimento a Tentativas de Suicídio do CBMMG
+            <br>Psicólogo Clínico | Especialista em Terapia Cognitivo-Comportamental
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter4', 1)">← Tópico Anterior</button>
+            <button onclick="goToNextChapter('chapter5')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 5 - SÉRIE 2
+           =================================== -->
+      <div id="chapter5" class="chapter-container">
+        <div class="topic-slide" id="chapter5-topic1">
+          <h2>CAPÍTULO 5 – O TEMPO NA CRISE SUICIDA: POR QUE O FUTURO DESAPARECE?</h2>
+          <p>
+            📢 <strong>CAPÍTULO 1 – O TEMPO NA CRISE SUICIDA: POR QUE O FUTURO DESAPARECE? ⏳</strong><br><br>
+            Durante uma crise, o tempo psicológico se contrai. O tentante sente que a dor <em>sempre existiu e sempre existirá</em>, sem conseguir projetar uma mudança no futuro.
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="nextTopic('chapter5', 1)">Próximo Tópico →</button>
+          </div>
+        </div>
+
+        <!-- Pode prosseguir criando mais tópicos conforme seu conteúdo original -->
+        <div class="topic-slide" id="chapter5-topic2">
+          <h3>🕰️ O TEMPO E A MENTE SUICIDA</h3>
+          <p>
+            A forma como experimentamos o tempo está diretamente ligada ao estado emocional. Durante uma crise suicida, essa percepção sofre alterações...
+          </p>
+
+          <div class="topic-navigation">
+            <button onclick="previousTopic('chapter5', 1)">← Tópico Anterior</button>
+            <button onclick="goToNextChapter('chapter6')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 6 - SÉRIE 2
+           =================================== -->
+      <div id="chapter6" class="chapter-container">
+        <div class="topic-slide" id="chapter6-topic1">
+          <h2>CAPÍTULO 6 – A DISTORÇÃO DO PASSADO: QUANDO A DOR SE TORNA A ÚNICA MEMÓRIA</h2>
+          <p>
+            📢 <strong>CAPÍTULO 2 – A DISTORÇÃO DO PASSADO...</strong><br><br>
+            [Conteúdo do capítulo 6...]
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="goToNextChapter('chapter7')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 7 - SÉRIE 2
+           =================================== -->
+      <div id="chapter7" class="chapter-container">
+        <div class="topic-slide" id="chapter7-topic1">
+          <h2>CAPÍTULO 7 – O FUTURO BLOQUEADO: REATIVANDO A PROJEÇÃO DE VIDA</h2>
+          <p>
+            📢 <strong>CAPÍTULO 3 – O FUTURO BLOQUEADO...</strong><br><br>
+            [Conteúdo do capítulo 7...]
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button onclick="goToNextChapter('chapter8')">Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================
+           CAPÍTULO 8 - SÉRIE 2
+           =================================== -->
+      <div id="chapter8" class="chapter-container">
+        <div class="topic-slide" id="chapter8-topic1">
+          <h2>CAPÍTULO 8 – QUANDO O TEMPO PERDE O RITMO: REGULAÇÃO CORPORAL E DA FALA</h2>
+          <p>
+            📢 <strong>CAPÍTULO 4 – QUANDO O TEMPO PERDE O RITMO...</strong><br><br>
+            [Conteúdo do capítulo 8...]
+          </p>
+
+          <div class="topic-navigation">
+            <button disabled>← Capítulo Anterior</button>
+            <button disabled>Próximo Capítulo →</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Projeto Segunda Chance – Conhecimento que Salva. Todos os direitos reservados.</p>
+    <p>Richelmy Murta – Major BM | Coordenador do GTO de Atendimento a Tentativas de Suicídio do CBMMG</p>
+    <p>Psicólogo Clínico | Especialista em Terapia Cognitivo-Comportamental</p>
+  </footer>
+
+  <script>
+    /***************************************************
+     * LÓGICA DE EXPANSÃO/COLAPSE DAS SÉRIES
+     ***************************************************/
+    const seriesButtons = document.querySelectorAll('.series-btn');
+
+    seriesButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Identifica qual série
+        const seriesId = button.getAttribute('data-series');
+        const chaptersList = document.getElementById(seriesId + 'Chapters');
+
+        // Alterna exibição da lista de capítulos
+        const isHidden = chaptersList.style.display === 'none';
+        chaptersList.style.display = isHidden ? 'block' : 'none';
+
+        // Gerenciar classe "active" no botão da série
+        if (isHidden) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+    });
+
+    /***************************************************
+     * LÓGICA DE EXIBIR CAPÍTULOS
+     ***************************************************/
+    const chapterButtons = document.querySelectorAll('.chapter-btn');
+    const allChapters = document.querySelectorAll('.chapter-container');
+
+    chapterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Pega o ID do capítulo
+        const chapterId = btn.getAttribute('data-chapter');
+
+        // Fecha todos os capítulos
+        allChapters.forEach(chapter => {
+          chapter.classList.remove('active', 'fadeIn');
+        });
+
+        // Remove classe active de todos os botões de capítulo
+        chapterButtons.forEach(b => {
+          b.classList.remove('active');
+        });
+
+        // Abre o capítulo selecionado
+        const chapterToShow = document.getElementById(chapterId);
+        chapterToShow.classList.add('active', 'fadeIn');
+
+        // Marca o botão de capítulo como ativo
+        btn.classList.add('active');
+
+        // Ao abrir o capítulo, exibe o primeiro tópico dele
+        showTopic(chapterId, 1);
+      });
+    });
+
+    /***************************************************
+     * LÓGICA DE TÓPICOS (SLIDES) DENTRO DOS CAPÍTULOS
+     ***************************************************/
+    function showTopic(chapterId, topicIndex) {
+      const chapterContainer = document.getElementById(chapterId);
+      const topicSlides = chapterContainer.querySelectorAll('.topic-slide');
+
+      // Esconde todos os tópicos
+      topicSlides.forEach(slide => slide.classList.remove('active', 'fadeIn'));
+
+      // Mostra o tópico desejado
+      const targetSlide = chapterContainer.querySelector('#' + chapterId + '-topic' + topicIndex);
+      if (targetSlide) {
+        targetSlide.classList.add('active', 'fadeIn');
+      }
+    }
+
+    function nextTopic(chapterId, currentTopicIndex) {
+      // Próximo tópico => currentTopicIndex + 1
+      const nextIndex = currentTopicIndex + 1;
+      showTopic(chapterId, nextIndex);
+    }
+
+    function previousTopic(chapterId, currentTopicIndex) {
+      // Tópico anterior => currentTopicIndex - 1
+      const prevIndex = currentTopicIndex - 1;
+      showTopic(chapterId, prevIndex);
+    }
+
+    /***************************************************
+     * NAVEGAÇÃO ENTRE CAPÍTULOS (BOTÃO "PRÓXIMO CAPÍTULO")
+     ***************************************************/
+    function goToNextChapter(nextChapterId) {
+      // Fecha todos os capítulos
+      allChapters.forEach(chapter => {
+        chapter.classList.remove('active', 'fadeIn');
+      });
+      // Remove active de todos os botões
+      chapterButtons.forEach(b => {
+        b.classList.remove('active');
+      });
+      // Abre o novo capítulo
+      const nextChapter = document.getElementById(nextChapterId);
+      nextChapter.classList.add('active', 'fadeIn');
+
+      // Marca o botão de capítulo
+      const btnToActivate = document.querySelector(`.chapter-btn[data-chapter="${nextChapterId}"]`);
+      if (btnToActivate) {
+        btnToActivate.classList.add('active');
+      }
+
+      // Exibe o primeiro tópico do próximo capítulo
+      showTopic(nextChapterId, 1);
+      // Rolagem suave ao topo
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Por padrão, ao carregar a página, não exibimos nenhum capítulo ativo.
+    // Se desejar que algum capítulo já abra por padrão, basta chamar a função:
+    // document.querySelector('[data-chapter="chapter1"]').click();
+  </script>
+</body>
+</html>
